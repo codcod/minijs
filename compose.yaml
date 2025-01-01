@@ -1,0 +1,12 @@
+---
+services:
+  app:
+    container_name: minijs
+    image: minijs
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    ports:
+      - "${PORT}:${PORT}"

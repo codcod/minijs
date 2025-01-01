@@ -1,0 +1,18 @@
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: minijs
+  namespace: default
+spec:
+  selector:
+    app: minijs
+  # type: ClusterIP
+  type: NodePort
+  ports:
+  - name: minijs
+    protocol: TCP
+    port: 8080
+    targetPort: 3000
+    nodePort: 30001
