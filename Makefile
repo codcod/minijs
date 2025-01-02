@@ -5,7 +5,7 @@
 .PHONY: .pre-commit
 
 REGISTRY = localhost:5000
-DESCRIPTORS_DIR = kube-descriptors
+MANIFESTS_DIR = k8s-manifests
 
 # build & run
 
@@ -29,8 +29,8 @@ docker/stop:
 # kubernetes
 
 kube/apply:
-	kubectl apply -f $(DESCRIPTORS_DIR)/minijs-deployment.yaml
-	kubectl apply -f $(DESCRIPTORS_DIR)/minijs-service.yaml
+	kubectl apply -f $(MANIFESTS_DIR)/minijs-deployment.yaml
+	kubectl apply -f $(MANIFESTS_DIR)/minijs-service.yaml
 
 kube/delete:
 	kubectl delete deployment minijs
