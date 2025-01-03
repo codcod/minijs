@@ -1,29 +1,40 @@
-import express from "express";
-import os from "os";
+const os = require('os')
+const express = require('express')
+const bodyParser = require('body-parser')
 
-const app = express();
-const hostname = "0.0.0.0";
-const port = 3000;
+const app = express()
+const port = 3000
 
-// This middleware will parse the incoming request body
-// and populates req.body with the parsed object.
-app.use(express.json());
+const db = require('./queries')
 
-app.get("/", (req, res) => {
-    res.json({
+app.use(bodyParser.json())
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+)
+
+app.get('/', (request, response) => {
+    response.json({
         date: (new Date()).toString(),
         error: false,
         hostname_os: os.hostname(),
-        hostname_req: req.hostname,
-        ip: req.ip,
-        remote_address_conn: req.connection.remoteAddress,
-        remote_address_socket: req.socket.remoteAddress,
-        username: req.body.username || "none",
-        x_forwarded_for: req.headers['x-forwarded-for'] || "none",
+        hostname_req: request.hostname,
+        ip: request.ip,
+        remote_address_conn: request.connection.remoteAddress,
+        remote_address_socket: request.socket.remoteAddress,
+        username: request.body.username || 'none',
+        x_forwarded_for: request.headers['x-forwarded-for'] || 'none',
         process_env: process.env
-    });
-});
+    })
+})
+
+app.get('/users', db.getUsers)
+app.get('/users/:id', db.getUserById)
+app.post('/users', db.createUser)
+app.put('/users/:id', db.updateUser)
+app.delete('/users/:id', db.deleteUser)
 
 app.listen(port, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
-});
+    console.log(`App running on port ${port}.`)
+})

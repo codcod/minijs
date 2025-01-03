@@ -1,13 +1,20 @@
 # Makefile
 
+.PHONY: run
 .PHONY: docker/build docker/push docker/run docker/stop
-.PHONY: api/get
+.PHONY: api/get api/get/users
 .PHONY: .pre-commit
 
 REGISTRY = localhost:5000
 MANIFESTS_DIR = k8s-manifests
 
-# build & run
+
+# run from command line
+#
+run:
+	node src/app.js
+
+# --- build & run
 
 # Build image
 #
@@ -26,7 +33,7 @@ docker/run:
 docker/stop:
 	docker stop minijs-app
 
-# kubernetes
+# --- kubernetes
 
 kube/apply:
 	kubectl apply -f $(MANIFESTS_DIR)/minijs-deployment.yaml
@@ -36,12 +43,15 @@ kube/delete:
 	kubectl delete deployment minijs
 	kubectl delete service minijs
 
-# call API
+# --- call API
 
 api/get:
 	http http://127.0.0.1:3000
 
-# other
+api/get/users:
+	http http://127.0.0.1:3000/users
+
+# --- other
 
 .pre-commit:
 	pre-commit run --all-files
